@@ -1,11 +1,11 @@
 package techzen.module4_c1224.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import techzen.module4_c1224.service.dto.JsonResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +23,8 @@ public class DictionaryController {
     public ResponseEntity<?> getDictionary(@RequestParam(defaultValue = "") String word) {
         String wordToSearch = word.toLowerCase().trim();
         if (dictEngViet.containsKey(wordToSearch)) {
-            return ResponseEntity.ok(dictEngViet.get(wordToSearch));
+            return JsonResponse.ok(dictEngViet.get(wordToSearch));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy từ này trong từ điển");
+        return JsonResponse.notFound("Không tìm thấy từ này trong từ điển");
     }
 }
