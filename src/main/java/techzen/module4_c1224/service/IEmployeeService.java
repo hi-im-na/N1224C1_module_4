@@ -1,7 +1,7 @@
 package techzen.module4_c1224.service;
 
 import techzen.module4_c1224.model.Employee;
-import techzen.module4_c1224.service.dto.EmployeeSearchRequest;
+import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
 
 import java.util.Collection;
 import java.util.UUID;

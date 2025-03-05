@@ -1,22 +1,30 @@
 package techzen.module4_c1224.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Data
+@Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Employee implements IEntity<UUID> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private LocalDate dob;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private BigDecimal salary;
     private String phone;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
     private Department department;
 }

@@ -5,9 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techzen.module4_c1224.model.Department;
 import techzen.module4_c1224.service.IDepartmentService;
-import techzen.module4_c1224.service.dto.JsonResponse;
-
-import java.util.UUID;
+import techzen.module4_c1224.service.dto.res.JsonResponse;
 
 @RestController
 @RequestMapping("/departments")
@@ -21,7 +19,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDepartmentById(@PathVariable UUID id) {
+    public ResponseEntity<?> getDepartmentById(@PathVariable Integer id) {
         return JsonResponse.ok(departmentService.findById(id));
     }
 
@@ -31,12 +29,12 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody Department department) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Department department) {
         return JsonResponse.ok(departmentService.update(id, department));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         departmentService.deleteById(id);
         return JsonResponse.noContent();
     }

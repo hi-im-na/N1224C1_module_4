@@ -1,4 +1,4 @@
-package techzen.module4_c1224.repository;
+package techzen.module4_c1224.repository.jdbc;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,6 @@ import techzen.module4_c1224.model.IEntity;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,9 +13,7 @@ public abstract class ICommonRepository<T extends IEntity<ID>, ID> {
 
     private Collection<T> data;
 
-    public UUID generateId() {
-        return UUID.randomUUID();
-    }
+    public abstract ID generateId();
 
     public Collection<T> findAll() {
         return data;

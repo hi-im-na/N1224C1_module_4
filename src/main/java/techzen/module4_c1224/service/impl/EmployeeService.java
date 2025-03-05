@@ -12,7 +12,7 @@ import techzen.module4_c1224.model.Employee;
 import techzen.module4_c1224.repository.IEmployeeRepository;
 import techzen.module4_c1224.service.IDepartmentService;
 import techzen.module4_c1224.service.IEmployeeService;
-import techzen.module4_c1224.service.dto.EmployeeSearchRequest;
+import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -32,7 +32,7 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Collection<Employee> findByAttributes(EmployeeSearchRequest attr) {
-        return employeeRepository.findByAttributes(attr.getName(), attr.getDobFrom(), attr.getDobTo(), attr.getGender(), attr.getSalaryRange(), attr.getPhone(), attr.getDepartmentId());
+        return employeeRepository.findByAttributes(attr);
     }
 
     @Override
@@ -45,7 +45,6 @@ public class EmployeeService implements IEmployeeService {
     @CachePut(key = "#result.id")
     public Employee save(Employee employee) {
         try {
-            employee.setId(employeeRepository.generateId());
             employee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if department exists
             return employeeRepository.save(employee);
         } catch (AppException e) {
@@ -74,9 +73,9 @@ public class EmployeeService implements IEmployeeService {
     @Override
     @CacheEvict(key = "#id")
     public void deleteById(UUID id) {
-        boolean isDeleted = employeeRepository.deleteById(id);
-        if (!isDeleted) {
+        if (!employeeRepository.existsById(id)) {
             throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
+        employeeRepository.deleteById(id);
     }
 }

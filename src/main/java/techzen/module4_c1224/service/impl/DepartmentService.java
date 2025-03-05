@@ -9,7 +9,6 @@ import techzen.module4_c1224.repository.IDepartmentRepository;
 import techzen.module4_c1224.service.IDepartmentService;
 
 import java.util.Collection;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,30 +22,29 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
-    public Department findById(UUID uuid) {
-        return departmentRepository.findById(uuid)
+    public Department findById(Integer id) {
+        return departmentRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_EXIST));
     }
 
     @Override
     public Department save(Department department) {
-        department.setId(departmentRepository.generateId());
         return departmentRepository.save(department);
     }
 
     @Override
-    public Department update(UUID uuid, Department department) {
-        Department existingDepartment = departmentRepository.findById(uuid)
+    public Department update(Integer id, Department department) {
+        Department existingDepartment = departmentRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DEPARTMENT_NOT_EXIST));
         existingDepartment.setName(department.getName());
         return departmentRepository.save(existingDepartment);
     }
 
     @Override
-    public void deleteById(UUID uuid) {
-        boolean isDeleted = departmentRepository.deleteById(uuid);
-        if (!isDeleted) {
+    public void deleteById(Integer id) {
+        if (!departmentRepository.existsById(id)) {
             throw new AppException(ErrorCode.DEPARTMENT_NOT_EXIST);
         }
+        departmentRepository.deleteById(id);
     }
 }

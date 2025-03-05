@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import techzen.module4_c1224.service.dto.ApiResponse;
+import techzen.module4_c1224.service.dto.res.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

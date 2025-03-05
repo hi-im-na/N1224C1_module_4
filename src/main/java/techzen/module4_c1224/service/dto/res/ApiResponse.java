@@ -1,4 +1,4 @@
-package techzen.module4_c1224.service.dto;
+package techzen.module4_c1224.service.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

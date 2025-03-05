@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import techzen.module4_c1224.service.dto.JsonResponse;
+import techzen.module4_c1224.service.dto.res.JsonResponse;
 
 import java.util.HashMap;
 import java.util.Map;

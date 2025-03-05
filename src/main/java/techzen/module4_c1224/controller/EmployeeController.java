@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techzen.module4_c1224.model.Employee;
 import techzen.module4_c1224.service.IEmployeeService;
-import techzen.module4_c1224.service.dto.EmployeeSearchRequest;
-import techzen.module4_c1224.service.dto.JsonResponse;
+import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
+import techzen.module4_c1224.service.dto.res.JsonResponse;
 
 import java.util.UUID;
 
