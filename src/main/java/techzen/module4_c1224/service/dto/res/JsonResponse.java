@@ -1,10 +1,10 @@
 package techzen.module4_c1224.service.dto.res;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDateTime;
 
 public class JsonResponse {
     public static <T> ResponseEntity<ApiResponse<?>> ok(T t) {

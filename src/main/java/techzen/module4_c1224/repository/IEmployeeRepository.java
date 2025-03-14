@@ -5,12 +5,13 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import techzen.module4_c1224.model.Employee;
 import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
 
-public interface IEmployeeRepository extends JpaRepository<Employee, UUID> {
+public interface IEmployeeRepository extends JpaRepository<Employee, UUID>, JpaSpecificationExecutor<Employee> {
     @Query("""
             select e from Employee e
             where (:#{#request.name} is null or e.name like %:#{#request.name}%) and

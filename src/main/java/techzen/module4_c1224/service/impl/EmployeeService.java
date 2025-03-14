@@ -7,11 +7,13 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import techzen.module4_c1224.exception.AppException;
 import techzen.module4_c1224.exception.ErrorCode;
 import techzen.module4_c1224.model.Employee;
 import techzen.module4_c1224.repository.IEmployeeRepository;
+import techzen.module4_c1224.repository.specification.EmployeeSpec;
 import techzen.module4_c1224.service.IDepartmentService;
 import techzen.module4_c1224.service.IEmployeeService;
 import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
@@ -33,7 +35,15 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Page<Employee> findByAttributes(EmployeeSearchRequest attr, Pageable pageable) {
-        return employeeRepository.findByAttributes(attr, pageable);
+        // return employeeRepository.findByAttributes(attr, pageable);
+        Specification<Employee> spec = Specification.where(EmployeeSpec.hasName(attr.getName()))
+                .and(EmployeeSpec.hasDobFrom(attr.getDobFrom()))
+                .and(EmployeeSpec.hasDobTo(attr.getDobTo()))
+                .and(EmployeeSpec.hasGender(attr.getGender()))
+                .and(EmployeeSpec.hasPhone(attr.getPhone()))
+                .and(EmployeeSpec.hasDepartmentId(attr.getDepartmentId()))
+                .and(EmployeeSpec.hasSalaryInRange(attr.getSalaryRange()));
+        return employeeRepository.findAll(spec, pageable);
     }
 
     @Override
