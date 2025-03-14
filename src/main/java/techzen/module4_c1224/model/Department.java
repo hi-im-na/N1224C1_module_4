@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department implements IEntity<Integer> {
+public class Department extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,12 +24,4 @@ public class Department implements IEntity<Integer> {
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("department")
     private List<Employee> employees;
-
-    public Department(Integer integer, String name) {
-    }
-
-    @Override
-    public Integer getId() {
-        return id;
-    }
 }

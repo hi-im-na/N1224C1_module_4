@@ -5,6 +5,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import techzen.module4_c1224.exception.AppException;
 import techzen.module4_c1224.exception.ErrorCode;
@@ -29,10 +31,9 @@ public class EmployeeService implements IEmployeeService {
         return employeeRepository.findAll();
     }
 
-
     @Override
-    public Collection<Employee> findByAttributes(EmployeeSearchRequest attr) {
-        return employeeRepository.findByAttributes(attr);
+    public Page<Employee> findByAttributes(EmployeeSearchRequest attr, Pageable pageable) {
+        return employeeRepository.findByAttributes(attr, pageable);
     }
 
     @Override
@@ -45,20 +46,23 @@ public class EmployeeService implements IEmployeeService {
     @CachePut(key = "#result.id")
     public Employee save(Employee employee) {
         try {
-            employee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if department exists
+            employee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if department
+                                                                                                  // exists
             return employeeRepository.save(employee);
         } catch (AppException e) {
             throw new AppException(ErrorCode.DEPARTMENT_ID_NOT_VALID);
         }
     }
 
-
     @Override
     @CachePut(key = "#id")
     public Employee update(UUID id, Employee employee) {
         try {
-            Employee existingEmployee = employeeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_EXIST));
-            existingEmployee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if department exists
+            Employee existingEmployee = employeeRepository.findById(id)
+                    .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_EXIST));
+            existingEmployee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if
+                                                                                                          // department
+                                                                                                          // exists
             existingEmployee.setDob(employee.getDob());
             existingEmployee.setGender(employee.getGender());
             existingEmployee.setSalary(employee.getSalary());

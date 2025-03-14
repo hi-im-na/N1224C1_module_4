@@ -1,6 +1,9 @@
 package techzen.module4_c1224.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techzen.module4_c1224.model.Employee;
@@ -18,8 +21,9 @@ public class EmployeeController {
     private final IEmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<?> getEmployees(EmployeeSearchRequest attr) {
-        return JsonResponse.ok(employeeService.findByAttributes(attr));
+    public ResponseEntity<?> getEmployees(EmployeeSearchRequest attr,
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return JsonResponse.ok(employeeService.findByAttributes(attr, pageable));
     }
 
     @GetMapping("/{id}")
