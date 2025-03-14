@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import techzen.module4_c1224.model.Employee;
+import techzen.module4_c1224.service.dto.req.EmployeeCreateDto;
 import techzen.module4_c1224.service.dto.req.EmployeeReqDto;
 import techzen.module4_c1224.service.dto.res.EmployeeResDto;
 
@@ -13,6 +14,8 @@ public interface IEmployeeMapper {
     Employee toEntity(EmployeeReqDto employeeReqDto);
 
     Employee toEntity(EmployeeResDto employeeResDto);
+
+    Employee toEntity(EmployeeCreateDto employeeCreateDto);
 
     EmployeeReqDto toReqDto(Employee employee);
 

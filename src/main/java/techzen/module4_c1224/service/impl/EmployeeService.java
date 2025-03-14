@@ -16,7 +16,9 @@ import techzen.module4_c1224.repository.IEmployeeRepository;
 import techzen.module4_c1224.repository.specification.EmployeeSpec;
 import techzen.module4_c1224.service.IDepartmentService;
 import techzen.module4_c1224.service.IEmployeeService;
+import techzen.module4_c1224.service.dto.req.EmployeeReqDto;
 import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
+import techzen.module4_c1224.service.mapper.IEmployeeMapper;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class EmployeeService implements IEmployeeService {
     private final IEmployeeRepository employeeRepository;
     private final IDepartmentService departmentService;
+    private final IEmployeeMapper employeeMapper;
 
     @Override
     public Collection<Employee> findAll() {
@@ -91,5 +94,11 @@ public class EmployeeService implements IEmployeeService {
             throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
         employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public Employee save(EmployeeReqDto employeeReqDto) {
+        Employee employee = employeeMapper.toEntity(employeeReqDto);
+        return employeeRepository.save(employee);
     }
 }
