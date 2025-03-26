@@ -31,6 +31,9 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation ("com.nimbusds:nimbus-jose-jwt:9.30.1")
+// https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto
+    implementation("org.springframework.security:spring-security-crypto:6.4.4")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

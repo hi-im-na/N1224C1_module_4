@@ -1,36 +1,68 @@
-package techzen.module4_c1224;
+package techzen.module4_c1224.service.impl;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.junit.jupiter.api.Test;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import techzen.module4_c1224.exception.AppException;
+import techzen.module4_c1224.exception.ErrorCode;
+import techzen.module4_c1224.model.Employee;
+import techzen.module4_c1224.repository.IEmployeeRepository;
+import techzen.module4_c1224.service.IAuthService;
+import techzen.module4_c1224.service.dto.req.AuthenticationRequest;
+import techzen.module4_c1224.service.dto.req.IntrospectRequest;
+import techzen.module4_c1224.service.dto.res.AuthenticationResponse;
+import techzen.module4_c1224.service.dto.res.IntrospectResponse;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-@SpringBootTest
-class Module4C1224ApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
-
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class AuthenticationService implements IAuthService {
+    final IEmployeeRepository employeeRepository;
 
     @Value("${jwt.signerKey}")
-    private String signerKey;
+    String signerKey;
 
-    @Test
-    public void getToken() {
-        String token = generateToken("QuangNN");
-        System.out.println(token);
+
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
+        Employee user = employeeRepository.findByUsername(authenticationRequest.getUsername());
+
+        if (user == null) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return AuthenticationResponse.builder()
+                .token(generateToken(user.getUsername()))
+                .build();
     }
 
+    @Override
+    public IntrospectResponse introspect(IntrospectRequest introspectRequest) throws ParseException, JOSEException {
+        return IntrospectResponse.builder()
+                .isValid(verifyJWT(introspectRequest.getToken()))
+                .build();
+    }
+
+    // Phương thức này sẽ được sử dụng để tạo JWT token
     // Phương thức generateToken tạo ra một JWT token với thông tin người dùng
     private String generateToken(String username) {
         // Tạo phần header cho JWT, sử dụng thuật toán ký là HS512 (HMAC SHA-512)
@@ -85,5 +117,4 @@ class Module4C1224ApplicationTests {
 
         return verified && expiryTime.after(new Date());
     }
-
 }

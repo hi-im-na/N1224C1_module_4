@@ -1,15 +1,14 @@
 package techzen.module4_c1224.repository;
 
-import java.util.UUID;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-
 import techzen.module4_c1224.model.Employee;
 import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
+
+import java.util.UUID;
 
 public interface IEmployeeRepository extends JpaRepository<Employee, UUID>, JpaSpecificationExecutor<Employee> {
     @Query("""
@@ -29,4 +28,6 @@ public interface IEmployeeRepository extends JpaRepository<Employee, UUID>, JpaS
             )
             """)
     Page<Employee> findByAttributes(EmployeeSearchRequest request, Pageable pageable);
+
+    Employee findByUsername(String username);
 }

@@ -18,6 +18,10 @@ public class Employee extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+
+    private String username;
+    private String password;
+
     private LocalDate dob;
     @Enumerated(EnumType.STRING)
     private Gender gender;
