@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import techzen.module4_c1224.exception.AppException;
 import techzen.module4_c1224.exception.ErrorCode;
@@ -18,6 +19,7 @@ import techzen.module4_c1224.service.IDepartmentService;
 import techzen.module4_c1224.service.IEmployeeService;
 import techzen.module4_c1224.service.dto.req.EmployeeReqDto;
 import techzen.module4_c1224.service.dto.req.EmployeeSearchRequest;
+import techzen.module4_c1224.service.dto.res.EmployeeResDto;
 import techzen.module4_c1224.service.mapper.IEmployeeMapper;
 
 import java.util.Collection;
@@ -30,6 +32,7 @@ public class EmployeeService implements IEmployeeService {
     private final IEmployeeRepository employeeRepository;
     private final IDepartmentService departmentService;
     private final IEmployeeMapper employeeMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Collection<Employee> findAll() {
@@ -60,7 +63,7 @@ public class EmployeeService implements IEmployeeService {
     public Employee save(Employee employee) {
         try {
             employee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if department
-                                                                                                  // exists
+            // exists
             return employeeRepository.save(employee);
         } catch (AppException e) {
             throw new AppException(ErrorCode.DEPARTMENT_ID_NOT_VALID);
@@ -74,8 +77,8 @@ public class EmployeeService implements IEmployeeService {
             Employee existingEmployee = employeeRepository.findById(id)
                     .orElseThrow(() -> new AppException(ErrorCode.EMPLOYEE_NOT_EXIST));
             existingEmployee.setDepartment(departmentService.findById(employee.getDepartment().getId())); // check if
-                                                                                                          // department
-                                                                                                          // exists
+            // department
+            // exists
             existingEmployee.setDob(employee.getDob());
             existingEmployee.setGender(employee.getGender());
             existingEmployee.setSalary(employee.getSalary());
@@ -97,8 +100,10 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public Employee save(EmployeeReqDto employeeReqDto) {
+    public EmployeeResDto save(EmployeeReqDto employeeReqDto) {
         Employee employee = employeeMapper.toEntity(employeeReqDto);
-        return employeeRepository.save(employee);
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+
+        return employeeMapper.toResDto(employeeRepository.save(employee));
     }
 }

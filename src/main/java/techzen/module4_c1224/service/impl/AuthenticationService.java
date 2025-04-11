@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import techzen.module4_c1224.exception.AppException;
 import techzen.module4_c1224.exception.ErrorCode;
 import techzen.module4_c1224.model.Employee;
+import techzen.module4_c1224.model.Role;
 import techzen.module4_c1224.repository.IEmployeeRepository;
 import techzen.module4_c1224.service.IAuthService;
 import techzen.module4_c1224.service.dto.req.AuthenticationRequest;
@@ -51,7 +52,7 @@ public class AuthenticationService implements IAuthService {
         }
 
         return AuthenticationResponse.builder()
-                .token(generateToken(user.getUsername()))
+                .token(generateToken(user))
                 .build();
     }
 
@@ -64,20 +65,20 @@ public class AuthenticationService implements IAuthService {
 
     // Phương thức này sẽ được sử dụng để tạo JWT token
     // Phương thức generateToken tạo ra một JWT token với thông tin người dùng
-    private String generateToken(String username) {
+    private String generateToken(Employee employee) {
         // Tạo phần header cho JWT, sử dụng thuật toán ký là HS512 (HMAC SHA-512)
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         // Tạo phần claims (payload) cho JWT, chứa các thông tin về người dùng
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username) // Đặt chủ thể (subject) của JWT là tên đăng nhập của người dùng
+                .subject(employee.getUsername()) // Đặt chủ thể (subject) của JWT là tên đăng nhập của người dùng
                 .issuer("sqc.com") // Đặt người phát hành JWT là "sqc.com"
                 .issueTime(new Date()) // Đặt thời gian phát hành JWT là thời điểm hiện tại
                 .expirationTime(new Date( // Đặt thời gian hết hạn cho JWT là 1 giờ kể từ lúc phát hành
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()
                 ))
                 // Thêm một custom claim (thông tin tùy chỉnh) vào JWT, chứa thông tin về đối tượng Student
-                .claim("student", "Lam-Thanh")
+                .claim("scope", getRole(employee))
                 .build(); // Xây dựng đối tượng JWTClaimsSet
 
         // Tạo payload từ claims đã tạo, chuyển đối tượng claims thành định dạng JSON
@@ -116,5 +117,12 @@ public class AuthenticationService implements IAuthService {
         // Trả về kết quả xác thực:
 
         return verified && expiryTime.after(new Date());
+    }
+
+    private String getRole(Employee employee) {
+        return employee.getRoles().stream()
+                .map(Role::getName)
+                .reduce((first, second) -> first + " " + second)
+                .orElse("");
     }
 }

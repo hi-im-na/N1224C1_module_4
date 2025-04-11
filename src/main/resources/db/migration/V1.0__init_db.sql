@@ -15,13 +15,3 @@ create table employee
     department_id int,
     foreign key (department_id) references department (id)
 );
-
-insert into department (name)
-values ('HR'),
-       ('IT'),
-       ('Finance');
-
-insert into employee (name, dob, gender, salary, phone, department_id)
-VALUES ( 'John', '1990-01-01', 'MALE', 1000, '123456789', 1),
-       ( 'Jane', '1991-01-02', 'FEMALE', 2000, '987654321', 2),
-       ( 'Tom', '1992-01-03', 'FEMALE', 3000, '123456789', 3);

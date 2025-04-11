@@ -9,6 +9,7 @@ import techzen.module4_c1224.model.Gender;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -25,4 +26,6 @@ public class EmployeeResDto implements Serializable {
     private Gender gender;
     private BigDecimal salary;
     private String phone;
+    private String username;
+    private Set<RoleResDto> roles;
 }
